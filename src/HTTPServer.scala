@@ -1,5 +1,5 @@
-import java.io.{BufferedReader, InputStreamReader}
 import java.net.ServerSocket
+import java.util.{Date, Locale}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -9,13 +9,13 @@ import scala.collection.mutable.ArrayBuffer
 object HTTPServer {
   def main(args: Array[String]): Unit = {
     val socket = new ServerSocket(8000).accept()
-    val br = new BufferedReader(new InputStreamReader(socket.getInputStream))
-    var line = ""
+    val out = socket.getOutputStream
     val response = new ArrayBuffer[String]
-    while ({ line = br.readLine(); line != null && !line.isEmpty }) {
-      response += line
-    }
+    response += "HTTP/1.1 200 OK"
+    response += "Content-Type: text/html"
+    response += "%ta, %<td %<tb %<tY %<tT %<tz" formatLocal(Locale.ENGLISH, new Date)
+    response += "Content-Length: 0"
     val result = response.toList.mkString("\n")
-    socket.getOutputStream.write(result.getBytes)
+    out.write(result.getBytes)
   }
 }
