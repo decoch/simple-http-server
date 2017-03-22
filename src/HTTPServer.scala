@@ -10,7 +10,10 @@ object HTTPServer {
   // https://twitter.github.io/scala_school/concurrency.html
   def main(args: Array[String]): Unit = {
     val serverSocket = new ServerSocket(8000)
-    serverSocket.accept()
-    println("Hello Request!")
+    val socket = serverSocket.accept()
+    val out = socket.getOutputStream
+    val response = "Hello Request!"
+    out.write(response.getBytes)
+    println(response)
   }
 }
