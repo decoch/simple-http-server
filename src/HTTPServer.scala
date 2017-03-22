@@ -1,19 +1,21 @@
+import java.io.{BufferedReader, InputStreamReader}
 import java.net.ServerSocket
+
+import scala.collection.mutable.ArrayBuffer
 
 /**
   * @author tominaga
   */
 object HTTPServer {
-  // 使いそうなパッケージ
-  // /Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/net/ServerSocket.java
-  // 参考にしたURL
-  // https://twitter.github.io/scala_school/concurrency.html
   def main(args: Array[String]): Unit = {
-    val serverSocket = new ServerSocket(8000)
-    val socket = serverSocket.accept()
-    val out = socket.getOutputStream
-    val response = "Hello Request!"
-    out.write(response.getBytes)
-    println(response)
+    val socket = new ServerSocket(8000).accept()
+    val br = new BufferedReader(new InputStreamReader(socket.getInputStream))
+    var line = ""
+    val response = new ArrayBuffer[String]
+    while ({ line = br.readLine(); line != null && !line.isEmpty }) {
+      response += line
+    }
+    val result = response.toList.mkString("\n")
+    socket.getOutputStream.write(result.getBytes)
   }
 }
