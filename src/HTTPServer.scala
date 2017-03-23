@@ -14,7 +14,8 @@ object HTTPServer {
     response += "HTTP/1.1 200 OK"
     response += "Content-Type: text/html"
     response += "%ta, %<td %<tb %<tY %<tT %<tz" formatLocal(Locale.ENGLISH, new Date)
-    response += "Content-Length: 0"
+    response += ""
+    response += "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>Hello Response HTML</title>\n</head>\n<body>\n<p>Hello Response HTML</p>\n</body>\n</html>"
     val result = response.toList.mkString("\n")
     out.write(result.getBytes)
   }
