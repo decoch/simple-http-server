@@ -1,3 +1,4 @@
+import java.io._
 import java.net.ServerSocket
 import java.util.{Date, Locale}
 
@@ -8,6 +9,9 @@ import scala.collection.mutable.ArrayBuffer
   */
 object HTTPServer {
   def main(args: Array[String]): Unit = {
+    val br = new BufferedReader(new InputStreamReader(new FileInputStream("./src/response.html")))
+    val html = br.lines().toArray.mkString("\n")
+
     val socket = new ServerSocket(8000).accept()
     val out = socket.getOutputStream
     val response = new ArrayBuffer[String]
@@ -15,7 +19,7 @@ object HTTPServer {
     response += "Content-Type: text/html"
     response += "%ta, %<td %<tb %<tY %<tT %<tz" formatLocal(Locale.ENGLISH, new Date)
     response += ""
-    response += "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>Hello Response HTML</title>\n</head>\n<body>\n<p>Hello Response HTML</p>\n</body>\n</html>"
+    response += html
     val result = response.toList.mkString("\n")
     out.write(result.getBytes)
   }
