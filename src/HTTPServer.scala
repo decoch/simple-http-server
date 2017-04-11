@@ -27,11 +27,17 @@ object HTTPServer {
   }
 
   private def buildResponse(url: String): String = {
-    val filePath = "./src" + url
+    println(url)
+    val filePath = "../src" + url
     val file = new File(filePath)
-    val contentType = "Content-Type: text/html"
+    println(file)
+    println(file.isFile)
+    println(file.exists())
+    val contentType = "Content-Type: image/png"
     val date = "%ta, %<td %<tb %<tY %<tT %<tz" formatLocal(Locale.ENGLISH, new Date)
-
+    val contentLength = "Content-Length: " + "0"
+    val acceptRange = "Accept-Ranges: bytes"
+    
     if (!file.exists() || !file.isFile) {
       val response = new ArrayBuffer[String]
       response += "HTTP/1.1 404 Not Found"
@@ -40,11 +46,13 @@ object HTTPServer {
       return response.toList.mkString("\n")
     }
 
-    val fileBr = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)))
+    val fileBr = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-8"))
     val body = fileBr.lines().toArray.mkString("\n")
     val response = new ArrayBuffer[String]
     response += "HTTP/1.1 200 OK"
     response += contentType
+    response += contentLength
+    response += acceptRange
     response += date
     response += ""
     response += body
